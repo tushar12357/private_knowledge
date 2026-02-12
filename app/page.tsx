@@ -9,10 +9,10 @@ import DocumentList from "@/components/DocumentList";
 export default function HomePage() {
   const [answer, setAnswer] = useState<string | null>(null);
   const [sources, setSources] = useState<any[]>([]);
+  const [docRefreshKey, setDocRefreshKey] = useState(0);
 
   return (
     <div className="space-y-8">
-      {/* Header */}
       <header className="text-center space-y-2">
         <h1 className="text-4xl font-bold tracking-tight">
           Private Knowledge Q&A
@@ -22,9 +22,9 @@ export default function HomePage() {
         </p>
       </header>
 
-      {/* Main Card */}
       <div className="bg-white rounded-2xl shadow-xl p-6 space-y-6">
-        <UploadBox />
+        <UploadBox onUploadSuccess={() => setDocRefreshKey(k => k + 1)} />
+
         <ChatBox
           onResult={(res) => {
             setAnswer(res.answer);
@@ -40,7 +40,6 @@ export default function HomePage() {
         )}
       </div>
 
-      {/* Sources */}
       {sources.length > 0 && (
         <div className="space-y-3">
           <h2 className="font-semibold text-slate-700">Sources</h2>
@@ -52,7 +51,7 @@ export default function HomePage() {
         </div>
       )}
 
-      <DocumentList />
+      <DocumentList refreshKey={docRefreshKey} />
     </div>
   );
 }
