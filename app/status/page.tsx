@@ -1,7 +1,13 @@
+import { headers } from "next/headers";
+
 export default async function StatusPage() {
-  const res = await fetch("/api/status", {
+  const host = (await headers()).get("host");
+  const protocol = process.env.NODE_ENV === "development" ? "http" : "https";
+
+  const res = await fetch(`${protocol}://${host}/api/status`, {
     cache: "no-store",
   });
+
   const data = await res.json();
 
   return (
