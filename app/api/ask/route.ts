@@ -3,9 +3,15 @@ import { supabase } from "@/lib/supabase";
 import { createEmbedding } from "@/lib/embeddings";
 import { buildPrompt } from "@/lib/prompt";
 import { generateAnswer } from "@/lib/hf-llm";
+import { getUserId } from "@/lib/auth";
 
 export async function POST(req: Request) {
   const { question } = await req.json();
+  const user = getUserId(req);
+
+  if (!user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
   if (!question) {
     return NextResponse.json(
@@ -17,11 +23,15 @@ export async function POST(req: Request) {
   // 1. Embed question
   const questionEmbedding = await createEmbedding(question);
 
-  // 2. Similarity search
-  const { data: chunks, error } = await supabase.rpc("match_chunks", {
-    query_embedding: questionEmbedding,
-    match_count: 5,
-  });
+  // 2. User-scoped similarity search
+  const { data: chunks, error } = await supabase.rpc(
+    "match_user_chunks",
+    {
+      query_embedding: questionEmbedding,
+      uid: user,
+      match_count: 5,
+    }
+  );
 
   if (error || !chunks || chunks.length === 0) {
     return NextResponse.json({
@@ -33,7 +43,7 @@ export async function POST(req: Request) {
   // 3. Build context
   const context = chunks.map((c: any) => c.content).join("\n\n");
 
-  // 4. Generate answer (HF)
+  // 4. Generate answer
   const prompt = buildPrompt(context, question);
   const answer = await generateAnswer(prompt);
 

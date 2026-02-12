@@ -25,6 +25,9 @@ export default function UploadBox({
 
     const res = await fetch("/api/upload", {
       method: "POST",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
       body: formData,
     });
 
@@ -76,9 +79,7 @@ export default function UploadBox({
       </div>
 
       {/* Text */}
-      <p className="font-semibold text-slate-800">
-        Upload a document
-      </p>
+      <p className="font-semibold text-slate-800">Upload a document</p>
       <p className="text-sm text-slate-500 mt-1">
         Drag & drop a file here or choose one
       </p>
@@ -116,9 +117,7 @@ export default function UploadBox({
       </button>
 
       {/* Status */}
-      {msg && (
-        <p className="mt-3 text-sm text-slate-600">{msg}</p>
-      )}
+      {msg && <p className="mt-3 text-sm text-slate-600">{msg}</p>}
     </form>
   );
 }

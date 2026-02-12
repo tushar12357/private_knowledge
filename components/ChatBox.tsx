@@ -16,7 +16,9 @@ export default function ChatBox({
     setLoading(true);
     const res = await fetch("/api/ask", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
       body: JSON.stringify({ question }),
     });
 

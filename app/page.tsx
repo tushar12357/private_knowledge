@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import UploadBox from "@/components/UploadBox";
 import ChatBox from "@/components/ChatBox";
 import SourceCard from "@/components/SourceCard";
@@ -10,9 +10,40 @@ export default function HomePage() {
   const [answer, setAnswer] = useState<string | null>(null);
   const [sources, setSources] = useState<any[]>([]);
   const [docRefreshKey, setDocRefreshKey] = useState(0);
+  const [checkingAuth, setCheckingAuth] = useState(true);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      window.location.href = "/auth";
+      return;
+    }
+    setCheckingAuth(false);
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    window.location.href = "/auth";
+  };
+
+  if (checkingAuth) {
+    return (
+      <div className="text-center py-10 text-slate-500">
+        Checking authentication…
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 relative">
+      {/* Logout Button */}
+      <button
+        onClick={handleLogout}
+        className="absolute top-0 right-0 text-sm px-4 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600 transition"
+      >
+        Logout
+      </button>
+
       <header className="text-center space-y-2">
         <h1 className="text-4xl font-bold tracking-tight">
           Private Knowledge Q&A
