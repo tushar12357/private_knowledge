@@ -15,7 +15,7 @@ export default function DocumentList({ refreshKey }: { refreshKey: number }) {
 
     const token = localStorage.getItem("token");
     if (!token) {
-      window.location.href = "/auth";
+      window.location.href = "/login";
       return;
     }
 
@@ -33,7 +33,7 @@ export default function DocumentList({ refreshKey }: { refreshKey: number }) {
 
     if (res.status === 401) {
       localStorage.removeItem("token");
-      window.location.href = "/auth";
+      window.location.href = "/login";
       return;
     }
 
@@ -44,8 +44,6 @@ export default function DocumentList({ refreshKey }: { refreshKey: number }) {
     setHasMore(data.hasMore);
     setLoading(false);
   }
-
-
 
   // initial + refresh
   useEffect(() => {

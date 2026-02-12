@@ -15,7 +15,7 @@ export default function HomePage() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
-      window.location.href = "/auth";
+      window.location.href = "/login";
       return;
     }
     setCheckingAuth(false);
@@ -23,7 +23,7 @@ export default function HomePage() {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    window.location.href = "/auth";
+    window.location.href = "/login";
   };
 
   if (checkingAuth) {
@@ -54,7 +54,7 @@ export default function HomePage() {
       </header>
 
       <div className="bg-white rounded-2xl shadow-xl p-6 space-y-6">
-        <UploadBox onUploadSuccess={() => setDocRefreshKey(k => k + 1)} />
+        <UploadBox onUploadSuccess={() => setDocRefreshKey((k) => k + 1)} />
 
         <ChatBox
           onResult={(res) => {
