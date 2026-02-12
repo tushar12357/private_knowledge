@@ -35,8 +35,9 @@ export default function AuthForm({ type }: AuthFormProps) {
       if (type === "login") {
         localStorage.setItem("token", data.token);
         window.location.href = "/";
-      } else {
+    } else {
         setMsg("Signup successful. Please log in.");
+        window.location.href = "/login";
       }
     } catch {
       setLoading(false);
